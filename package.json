@@ -1,0 +1,36 @@
+{
+  "name": "loopy",
+  "version": "0.0.1",
+  "description": "Loopy is an unofficial cli for CBA-Loop. I wanted to send my mom money via cli, so I built this.",
+  "main": "src/index.js",
+  "author": "geofmureithi",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "dotenv": "^5.0.1",
+    "vorpal": "^1.12.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.0.4",
+    "standard": "^11.0.1"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "npm run test-unit",
+    "test-unit": "mocha tests/unit/*.js",
+    "test-integration": "mocha --exit tests/integrations/*.js"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "context",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "it",
+      "expect"
+    ]
+  }
+}
