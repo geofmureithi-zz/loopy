@@ -1,8 +1,11 @@
 const vorpal = require('vorpal')()
 require('dotenv').config()
+const Table = require('cli-table')
 const login = require('./endpoints/login')
 const checkBalance = require('./endpoints/check-balance')
 const sendToMobile = require('./endpoints/send-to-mobile')
+const checkIncomeExpenses = require('./endpoints/expenses-income')
+
 let authCode = null
 let user = {}
 
@@ -50,5 +53,58 @@ vorpal
     next()
   })
 vorpal
+  .command('check-expenditure', 'Gives you a log of how you have spent money')
+  .action(async function (args, next) {
+    try {
+      const resp = await checkIncomeExpenses(authCode)
+      const table = new Table({
+        head: ['Account', 'Month', 'Amount', 'Transactions'],
+        colWidths: [30, 30, 30, 30]
+      })
+      const expenses = resp.data.result.expensesIncomes
+      if(expenses && expenses.length) expenses.map(({ accId, month, amount, number }) => table.push([ accId, month, amount, number]))
+      this.log(`-------------------Expenses & Income ------------------`)
+      this.log(table.toString())
+    } catch (e) {
+      this.log(`Check expenditure Failed. Reason: ${e.message}`)
+    }
+
+    next()
+  })
+  vorpal
+    .command('transfer-to-mobile', 'Send your Bae some money :)')
+    .action(function (args, next) {
+      const promise = this.prompt([
+        {
+          type: 'input',
+          name: 'amount',
+          message: 'Enter Amount: '
+        },
+        {
+          type: 'input',
+          name: 'msisdn',
+          message: 'Enter Phone Number (beginning with 254): '
+        },
+        {
+          type: 'input',
+          name: 'purpose',
+          message: 'What is the transfer for?: '
+        }
+      ])
+
+      promise.then(async (inputs) => {
+        const { amount, msisdn, purpose } = inputs
+        try {
+          const resp = await sendToMobile(amount, msisdn, purpose, user, authCode)
+          this.log(`${resp.data.transactionId} Confirmed, Ksh ${amount} has been transfered to ${msisdn}. Purpose: ${purpose}`)
+        } catch (e) {
+          this.log(`Transfer Failed. Reason: ${e.message}`)
+        }
+        next()
+      })
+    })
+vorpal
   .delimiter('loopy$')
   .show()
+  .log('Welcome to Loopy, Please enter your loop email & password to continue')
+  .exec('login')
