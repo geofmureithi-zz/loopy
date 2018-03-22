@@ -95,8 +95,13 @@ vorpal
     promise.then(async (inputs) => {
       const { amount, msisdn, purpose } = inputs
       try {
-        const resp = await sendToMobile(amount, msisdn, purpose, user, authCode)
-        this.log(`${resp.data.transactionId} Confirmed, Ksh ${amount} has been transfered to ${msisdn}. Purpose: ${purpose}`)
+        const resp = await sendToMobile(amount, msisdn, purpose, user, authCode);
+        
+        if(resp.data && resp.data.balanceAfterTxn === -1){
+          this.log("Oops! You don't seem to have that much in your account.");
+        } else {
+          this.log(`${resp.data.transactionId} Confirmed, Ksh ${amount} has been transfered to ${msisdn}. Purpose: ${purpose}`);
+        }
       } catch (e) {
         this.log(`Transfer Failed. Reason: ${e.message}`)
       }
