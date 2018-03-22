@@ -41,6 +41,7 @@ Install the dependencies and devDependencies and start the server.
 $ git clone <url>
 $ cd loopy
 $ npm install
+$ cp .env.example .env
 $ npm start
 ```
 
