@@ -13,7 +13,7 @@ module.exports = async (amount, msisdn, purpose, { customerId }, authCode) => {
     purpose,
     subcategoryId: 43,
     subcategoryName: 'Internal Money Transfer',
-    transferMethod: 4 //Mobile I Guess
+    transferMethod: 4 // Mobile I Guess
   }, {
     headers: {
       'Authorization': 'Bearer ' + authCode

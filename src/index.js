@@ -29,7 +29,7 @@ vorpal
       const { email, password } = creds
       try {
         const resp = await login(email, password)
-        if(resp.data.returnCode === 3509) throw new Error(resp.data.returnMessage)
+        if (resp.data.returnCode === 3509) throw new Error(resp.data.returnMessage)
         authCode = resp.headers['auth-token']
         user = resp.data
         this.log(`Welcome ${user.firstName}, you are now logged in to loopy`)
@@ -62,7 +62,7 @@ vorpal
         colWidths: [30, 30, 30, 30]
       })
       const expenses = resp.data.result.expensesIncomes
-      if(expenses && expenses.length) expenses.map(({ accId, month, amount, number }) => table.push([ accId, month, amount, number]))
+      if (expenses && expenses.length) expenses.map(({ accId, month, amount, number }) => table.push([ accId, month, amount, number ]))
       this.log(`-------------------Expenses & Income ------------------`)
       this.log(table.toString())
     } catch (e) {
@@ -71,38 +71,38 @@ vorpal
 
     next()
   })
-  vorpal
-    .command('transfer-to-mobile', 'Send your Bae some money :)')
-    .action(function (args, next) {
-      const promise = this.prompt([
-        {
-          type: 'input',
-          name: 'amount',
-          message: 'Enter Amount: '
-        },
-        {
-          type: 'input',
-          name: 'msisdn',
-          message: 'Enter Phone Number (beginning with 254): '
-        },
-        {
-          type: 'input',
-          name: 'purpose',
-          message: 'What is the transfer for?: '
-        }
-      ])
+vorpal
+  .command('transfer-to-mobile', 'Send your Bae some money :)')
+  .action(function (args, next) {
+    const promise = this.prompt([
+      {
+        type: 'input',
+        name: 'amount',
+        message: 'Enter Amount: '
+      },
+      {
+        type: 'input',
+        name: 'msisdn',
+        message: 'Enter Phone Number (beginning with 254): '
+      },
+      {
+        type: 'input',
+        name: 'purpose',
+        message: 'What is the transfer for?: '
+      }
+    ])
 
-      promise.then(async (inputs) => {
-        const { amount, msisdn, purpose } = inputs
-        try {
-          const resp = await sendToMobile(amount, msisdn, purpose, user, authCode)
-          this.log(`${resp.data.transactionId} Confirmed, Ksh ${amount} has been transfered to ${msisdn}. Purpose: ${purpose}`)
-        } catch (e) {
-          this.log(`Transfer Failed. Reason: ${e.message}`)
-        }
-        next()
-      })
+    promise.then(async (inputs) => {
+      const { amount, msisdn, purpose } = inputs
+      try {
+        const resp = await sendToMobile(amount, msisdn, purpose, user, authCode)
+        this.log(`${resp.data.transactionId} Confirmed, Ksh ${amount} has been transfered to ${msisdn}. Purpose: ${purpose}`)
+      } catch (e) {
+        this.log(`Transfer Failed. Reason: ${e.message}`)
+      }
+      next()
     })
+  })
 vorpal
   .delimiter('loopy$')
   .show()
