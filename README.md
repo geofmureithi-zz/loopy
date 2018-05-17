@@ -83,3 +83,4 @@ MIT
 **Free Software, Hell Yeah!**
 
 Disclaimer: This library (and repo) is not in way assosiated with CBA or CBA loop and any views expressed are strictly mine.
+For education purposes only. Cash me outside.
